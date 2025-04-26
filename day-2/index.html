@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes App</title>
+  <link href="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" rel="preload" as="script">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 240px 300px 1fr;
+      height: 100vh;
+    }
+
+    .sidebar {
+      background: #fff;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .nav ul,
+    .tags ul {
+      list-style: none;
+    }
+
+    .nav li,
+    .tags li {
+      padding: 6px 0;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .nav li.active {
+      font-weight: bold;
+      color: #3b82f6;
+    }
+
+    .nav li:hover,
+    .tags li:hover {
+      color: #3b82f6;
+    }
+
+    .tags h4 {
+      margin-top: 30px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .main {
+      grid-column: span 2;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .top-bar input {
+      padding: 8px 12px;
+      width: 280px;
+      border: 1px solid #ccc;
+      border-radius: 9999px;
+      outline: none;
+    }
+
+    .btn {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .note-list {
+      background-color: #f9fafb;
+      padding: 20px;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
+    }
+
+    .note {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      transition: 0.2s;
+    }
+
+    .note:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .note.active {
+      border: 2px solid #3b82f6;
+    }
+
+    .note .tags {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .note-detail {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .note-detail h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .note-body ol {
+      margin-left: 20px;
+    }
+
+    .note-body p {
+      margin-top: 10px;
+    }
+
+    .actions {
+      margin-top: 20px;
+    }
+
+    .btn.archive {
+      background-color: #0ea5e9;
+    }
+
+    .btn.delete {
+      background-color: #ef4444;
+    }
+
+    .btn.cancel {
+      background-color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">🖋 Notes</div>
+      <nav class="nav">
+        <ul>
+          <li class="active">All Notes</li>
+          <li>Archived Notes</li>
+        </ul>
+      </nav>
+      <div class="tags">
+        <h4>Tags</h4>
+        <ul>
+          <li>Cooking</li>
+          <li>Dev</li>
+          <li>Fitness</li>
+          <li>Health</li>
+          <li>Personal</li>
+          <li>React</li>
+          <li>Recipes</li>
+          <li>Shopping</li>
+          <li>Travel</li>
+          <li>TypeScript</li>
+        </ul>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="top-bar">
+        <button class="btn new-note">+ Create New Note</button>
+        <input type="text" placeholder="Search notes...">
+      </header>
+      <div class="content">
+        <section class="note-list">
+          <div class="note active" onclick="selectNote(this)">
+            <h3>React Performance Optimization</h3>
+            <p class="tags">Dev, React</p>
+            <small>29 Oct 2024</small>
+          </div>
+          <div class="note" onclick="selectNote(this)">
+            <h3>Japan Travel Planning</h3>
+            <p class="tags">Travel, Personal</p>
+            <small>28 Oct 2024</small>
+          </div>
+        </section>
+        <section class="note-detail">
+          <h2 id="note-title">React Performance Optimization</h2>
+          <p class="meta">Tags: <span>Dev, React</span> | Last edited: 29 Oct 2024</p>
+          <div class="note-body">
+            <ol>
+              <li><strong>Code Splitting</strong><br>Use React.lazy() and dynamic imports</li>
+              <li><strong>Memoization</strong><br>useMemo, useCallback, React.memo</li>
+              <li><strong>Virtual List</strong><br>Use react-window for long lists</li>
+            </ol>
+            <p><strong>TODO:</strong> Benchmark and optimize</p>
+          </div>
+          <div class="actions">
+            <button class="btn archive">Archive</button>
+            <button class="btn delete">Delete</button>
+            <button class="btn save">Save</button>
+            <button class="btn cancel">Cancel</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+    function selectNote(element) {
+      const notes = document.querySelectorAll('.note');
+      notes.forEach(note => note.classList.remove('active'));
+      element.classList.add('active');
+
+      const title = element.querySelector('h3').textContent;
+      const tags = element.querySelector('.tags').textContent;
+      const date = element.querySelector('small').textContent;
+
+      document.getElementById('note-title').textContent = title;
+      document.querySelector('.note-detail .meta').innerHTML = Tags: <span>${tags}</span> | Last edited: ${date};
+    }
+  </script>
+</body>
+</html>
